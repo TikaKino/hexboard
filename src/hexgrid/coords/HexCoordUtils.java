@@ -7,8 +7,8 @@ import org.newdawn.slick.geom.Point;
 /**
  * Utility functions to handle individual co-ordinate points, converting between the possible systems.
  * 
- * @author ms1r08
- *
+ * @author	ms1r08
+ * @see		http://www.redblobgames.com/grids/hexagons/
  */
 public class HexCoordUtils {
 	
@@ -108,20 +108,33 @@ public class HexCoordUtils {
 		return new Point(fx,fy);
 	}
 	
-	public static ArrayList<Point> hexCornersFractional2D(AxialHexCoord ac)
+	private static Point leftHexCornerFractional2D(AxialHexCoord ac)
 	{
 		Point center = HexCoordUtils.hexToFractional2D(ac);
-		float cx = center.getX();
-		float cy = center.getY();
+		return new Point(center.getX()-1.0f,center.getY());
+	}
+	
+	private static Point rightHexCornerFractional2D(AxialHexCoord ac)
+	{
+		Point center = HexCoordUtils.hexToFractional2D(ac);
+		return new Point(center.getX()+1.0f,center.getY());
+	}
+	
+	public static ArrayList<Point> hexCornersFractional2D(AxialHexCoord ac)
+	{
 		ArrayList<Point> out = new ArrayList<Point>(6);
+		//For consistency and to reduce rounding errors, each hex "owns" the two corners level with its centre; i=0 and i=3
+		//Top left corner is owned by a(-1,0); Top right by a(1,-1); Bottom left by a(-1,1) and Bottom right by a(1,0)
+		//order is R,BR,BL,L,TL,TR
+		//This is better than using sin and cos to calculate points from the center of each hex individually
+		//as that leads to subtly different coordinates for each point thanks to the joys of float precision errors
 		
-		for(int i = 0; i < 6; i++)
-		{
-			float angle = 2 * (float)Math.PI / 6 * i;
-			float fx = cx + (float)Math.cos(angle);
-			float fy = cy + (float)Math.sin(angle);
-			out.add(new Point(fx,fy));
-		}
+		out.add(HexCoordUtils.rightHexCornerFractional2D(ac));
+		out.add(HexCoordUtils.leftHexCornerFractional2D(new AxialHexCoord(ac.q+1,ac.r)));
+		out.add(HexCoordUtils.rightHexCornerFractional2D(new AxialHexCoord(ac.q-1,ac.r+1)));
+		out.add(HexCoordUtils.leftHexCornerFractional2D(ac));
+		out.add(HexCoordUtils.rightHexCornerFractional2D(new AxialHexCoord(ac.q-1,ac.r)));
+		out.add(HexCoordUtils.leftHexCornerFractional2D(new AxialHexCoord(ac.q+1,ac.r-1)));
 		
 		return out;
 	}
