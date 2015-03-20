@@ -19,6 +19,7 @@ import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.command.InputProviderListener;
 import org.newdawn.slick.command.MouseButtonControl;
 import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 import hexgrid.*;
@@ -122,12 +123,11 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		while(it.hasNext())
 		{
 			AxialHexCoord ac = it.next();
-			//ArrayList<Integer> pixels = HexCoordUtils.hexToPixel(ac, this.hexSizePixels);
 			Point fractionalHexCenter = HexCoordUtils.hexToFractional2D(ac);
 			int px = (int)(fractionalHexCenter.getX() * (float)this.hexSizePixels);
 			int py = (int)(fractionalHexCenter.getY() * (float)this.hexSizePixels);
 			int hexh = (int)((float)Math.sqrt(3)/2 * (float)this.hexSizePixels);
-
+			
 			g.drawOval(px+this.viewoffsetx-2, py+this.viewoffsety-2, 4, 4);
 			
 			OddQOffsetHexCoord oq = ac.getOddQOffset();
@@ -154,10 +154,10 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		}
 		g.setLineWidth(oldw);
 		
-		//Highlight selected hex, surrounds and path to start corner
+		//Highlight selected hex, hexes within 4.2 distance (completely arbitrary number :p) and path to oq(0,0)
 		if(this.selected != null)
 		{
-			ArrayList<Hex> surrounds = this.hexgrid.getAdjacentHexes(this.selected);
+			ArrayList<Hex> surrounds = this.hexgrid.getPossibleGroundHexes(this.selected,4.2);
 			Iterator<Hex> surrit = surrounds.iterator();
 			while(surrit.hasNext())
 			{
@@ -187,7 +187,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				g.setLineWidth(oldw);
 			}
 			
-			if(this.pathToSelected != null)
+			/*if(this.pathToSelected != null)
 			{
 				Iterator<Hex> path = this.pathToSelected.iterator();
 				while(path.hasNext())
@@ -217,7 +217,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 					g.setColor(oldc);
 					g.setLineWidth(oldw);
 				}
-			}
+			}*/
 			
 			AxialHexCoord ac = this.selected.getCoords();
 			ArrayList<Point> cornerFracs = HexCoordUtils.hexCornersFractional2D(ac);
@@ -321,7 +321,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				Hex corner = this.hexgrid.get(new AxialHexCoord(0,0));
 				if(corner != null)
 				{
-					this.pathToSelected = this.hexgrid.getRoute(corner, h);
+					this.pathToSelected = this.hexgrid.getGroundRoute(corner, h);
 				}
 			}
 			else

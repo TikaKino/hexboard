@@ -10,6 +10,7 @@ import org.jgrapht.alg.ConnectivityInspector;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.ListenableDirectedWeightedGraph;
+import org.jgrapht.traverse.ClosestFirstIterator;
 
 import hexgrid.coords.*;
 
@@ -73,7 +74,7 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		return rem;
 	}
 	
-	public ArrayList<Hex> getAdjacentHexes(Hex source)
+	public ArrayList<Hex> getAdjacentGroundHexes(Hex source)
 	{
 		ArrayList<Hex> out = new ArrayList<Hex>(6);
 		Set<DefaultWeightedEdge> edges = this.groundMobilityGraph.outgoingEdgesOf(source);
@@ -90,7 +91,7 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		
 	}
 	
-	public ArrayList<Hex> getRoute(Hex source, Hex target)
+	public ArrayList<Hex> getGroundRoute(Hex source, Hex target)
 	{
 		DijkstraShortestPath<Hex,DefaultWeightedEdge> pather = new DijkstraShortestPath<Hex,DefaultWeightedEdge>(this.groundMobilityGraph,source,target);
 		List<DefaultWeightedEdge> edges = pather.getPathEdgeList();
@@ -103,6 +104,17 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 			if(h != null)
 				out.add(h);
 		}
+		return out;
+	}
+	
+	public ArrayList<Hex> getPossibleGroundHexes(Hex source, double maxDistance)
+	{
+		ArrayList<Hex> out = new ArrayList<Hex>();
+		
+		ClosestFirstIterator<Hex,DefaultWeightedEdge> it = new ClosestFirstIterator<Hex,DefaultWeightedEdge>(this.groundMobilityGraph,source,maxDistance);
+		while(it.hasNext())
+			out.add(it.next());
+		
 		return out;
 	}
 }
