@@ -19,7 +19,6 @@ import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.command.InputProviderListener;
 import org.newdawn.slick.command.MouseButtonControl;
 import org.newdawn.slick.geom.Point;
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Rectangle;
 
 import hexgrid.*;
@@ -59,6 +58,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		super("Simple Draw Hexes");
 		
 		this.hexgrid = new HexGrid(gridsize,gridsize);
+		this.hexgrid.addMobilityType("Infantry");
 		for(int x = 0; x < gridsize; x++)
 		{
 			for(int y = 0; y < gridsize; y++)
@@ -157,7 +157,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		//Highlight selected hex, hexes within 4.2 distance (completely arbitrary number :p) and path to oq(0,0)
 		if(this.selected != null)
 		{
-			ArrayList<Hex> surrounds = this.hexgrid.getPossibleGroundHexes(this.selected,4.2);
+			ArrayList<Hex> surrounds = this.hexgrid.getPossibleGraphHexes(this.selected,2.2,"Infantry");
 			Iterator<Hex> surrit = surrounds.iterator();
 			while(surrit.hasNext())
 			{
@@ -321,7 +321,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				Hex corner = this.hexgrid.get(new AxialHexCoord(0,0));
 				if(corner != null)
 				{
-					this.pathToSelected = this.hexgrid.getGroundRoute(corner, h);
+					this.pathToSelected = this.hexgrid.getGraphShortestRoute(corner, h, "Infantry");
 				}
 			}
 			else
