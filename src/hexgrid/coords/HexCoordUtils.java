@@ -92,13 +92,17 @@ public class HexCoordUtils {
 	{	
 		float x = p.getX();
 		float y = p.getY();
+
+		float q = x * (float)(2.0f/3.0f);
+		float r = (-x / 3.0f) + ((((float)Math.sqrt(3))/3.0f) * y);
 		
-		float cx = x * 2/3;
-		float cz = ((x * -1)/3 + (float)Math.sqrt(3)/3 * y);
-		float cy = -cx-cz;
+		float cx = q;
+		float cz = r;
+		float cy = -q-r;
 		
-		CubeHexCoord cube = HexCoordUtils.cubeFloatToCube(new CubeFloatHexCoord(cx,cy,cz));
-		return HexCoordUtils.cubeToAxial(cube);
+		CubeFloatHexCoord cfh = new CubeFloatHexCoord(cx,cy,cz);
+		CubeHexCoord ch = HexCoordUtils.cubeFloatToCube(cfh);
+		return ch.getAxial();
 	}
 	
 	public static Point hexToFractional2D(AxialHexCoord ac)
