@@ -127,7 +127,8 @@ public class HexCoordUtils {
 	public static ArrayList<Point> hexCornersFractional2D(AxialHexCoord ac)
 	{
 		ArrayList<Point> out = new ArrayList<Point>(6);
-		//For consistency and to reduce rounding errors, each hex "owns" the two corners level with its centre; i=0 and i=3
+		//For consistency and to reduce rounding errors, each hex "owns" the two corners level with its 
+		//centre; i=0 and i=3 by the standard model.
 		//Top left corner is owned by a(-1,0); Top right by a(1,-1); Bottom left by a(-1,1) and Bottom right by a(1,0)
 		//order is R,BR,BL,L,TL,TR
 		//This is better than using sin and cos to calculate points from the center of each hex individually
