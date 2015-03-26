@@ -12,8 +12,8 @@
 	</info>
 	<hexes>
 		<hex x="0" y="0">
-			<terrain>Open</terrain>
-			<height>1</height>
+			<terrain>Light Woods</terrain>
+			<height>0</height>
 			<roads>
 				<road x="1" y="0"/>
 			</roads>

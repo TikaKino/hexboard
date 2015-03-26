@@ -47,6 +47,20 @@ public class Hex {
 		return this.type;
 	}
 	
+	public String getTypeAbbreviation()
+	{
+		if(this.type.equals("Open"))
+			return "O";
+		if(this.type.equals("Light Woods"))
+			return "LW";
+		if(this.type.equals("Heavy Woods"))
+			return "HW";
+		if(this.type.equals("Rough"))
+			return "R";
+		
+		return "?";
+	}
+	
 	public void setHeight(int height)
 	{
 		this.height = height;
@@ -102,10 +116,10 @@ public class Hex {
 		else
 		{
 			//Any mobility modifications cancelled by the presence of a road here
-			if(this.getType().equals("LightWoods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getType().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 1.0;
 		
-			if(this.getType().equals("HeavyWoods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getType().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 2.0;
 		}
 		

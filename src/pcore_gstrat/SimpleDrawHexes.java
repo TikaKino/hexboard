@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.Iterator;
 
+import mapbuilder.MapBuildException;
+import mapbuilder.MapBuilder;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -52,12 +55,13 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 	
 	protected TrueTypeFont fontMainText;
 	protected TrueTypeFont fontCoords;
+	protected TrueTypeFont fontCentreLetter;
 	
 	public SimpleDrawHexes()
 	{
 		super("Simple Draw Hexes");
 		
-		this.hexgrid = new HexGrid(gridsize,gridsize);
+		/*this.hexgrid = new HexGrid(gridsize,gridsize);
 		this.hexgrid.addMobilityType("Infantry");
 		for(int x = 0; x < gridsize; x++)
 		{
@@ -67,7 +71,16 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				Hex h = new Hex(ac);
 				this.hexgrid.put(ac, h);
 			}
+		}*/
+		try {
+			MapBuilder mb = new MapBuilder("maptest.xml");
+			this.hexgrid = mb.getHexGrid();
+		} catch (MapBuildException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
 		}
+		
+		this.hexgrid.addMobilityType("Infantry");
 		
 		this.selected = null;
 		this.pathToSelected = null;
@@ -107,6 +120,8 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		this.fontMainText = new TrueTypeFont(f,false);
 		f = new Font("Courier New",Font.PLAIN,12);
 		this.fontCoords = new TrueTypeFont(f,false);
+		f = new Font("Courier New",Font.PLAIN,12);
+		this.fontCentreLetter = new TrueTypeFont(f,false);
 	}
 	
 	@Override
@@ -116,6 +131,9 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		Rectangle clip = new Rectangle(this.viewportTLx,this.viewportTLy,this.viewportBRx - this.viewportTLx,this.viewportBRy - this.viewportTLy);
 		g.setClip(clip);
 		
+		int width;
+		int height;
+		
 		Set<AxialHexCoord> coords = this.hexgrid.keySet();
 		Iterator<AxialHexCoord> it = coords.iterator();
 		float oldw = g.getLineWidth();
@@ -123,18 +141,27 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		while(it.hasNext())
 		{
 			AxialHexCoord ac = it.next();
+			Hex hex = this.hexgrid.get(ac);
 			Point fractionalHexCenter = HexCoordUtils.hexToFractional2D(ac);
 			int px = (int)(fractionalHexCenter.getX() * (float)this.hexSizePixels);
 			int py = (int)(fractionalHexCenter.getY() * (float)this.hexSizePixels);
 			int hexh = (int)((float)Math.sqrt(3)/2 * (float)this.hexSizePixels);
 			
-			g.drawOval(px+this.viewoffsetx-2, py+this.viewoffsety-2, 4, 4);
+			String centre = hex.getTypeAbbreviation();
+			width = this.fontCentreLetter.getWidth(centre) / 2;
+			height = this.fontCentreLetter.getHeight(centre) / 2;
+			this.fontCentreLetter.drawString((float)(px+this.viewoffsetx-width), (float)(py+this.viewoffsety-height), centre);
 			
 			OddQOffsetHexCoord oq = ac.getOddQOffset();
 			String out = "("+oq.x+","+oq.y+")";
-			int width = this.fontCoords.getWidth(out) / 2;
-			int height = this.fontCoords.getHeight(out);
+			width = this.fontCoords.getWidth(out) / 2;
+			height = this.fontCoords.getHeight(out);
 			this.fontCoords.drawString((float)(px+this.viewoffsetx-width), (float)(py+this.viewoffsety+hexh-height), out, Color.gray);
+			
+			out = ""+hex.getHeight();
+			width = this.fontCoords.getWidth(out) / 2;
+			int height2 = this.fontCoords.getHeight(out);
+			this.fontCoords.drawString((float)(px+this.viewoffsetx-width), (float)(py+this.viewoffsety+hexh-height-height2+4), out, Color.gray);
 			
 			ArrayList<Point> cornerFracs = HexCoordUtils.hexCornersFractional2D(ac);
 			for(int i = 0; i < 6; i++)
@@ -256,8 +283,12 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 			String out = "";
 			out += hex.getType()+" ";
 			out += "("+oq.x+","+oq.y+")";
+			height = this.fontMainText.getHeight(out);
 			
 			this.fontMainText.drawString(10.0f, (float)(10+this.viewportTLy), out, Color.gray);
+			
+			out = "Height "+hex.getHeight();
+			this.fontMainText.drawString(10.0f, (float)(10+this.viewportTLy+height+2), out, Color.gray);
 		}
 		g.clearClip();
 		

@@ -64,6 +64,9 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		
 		graph.addVertex(h);
 		
+		if(!graph.containsVertex(h))
+			throw new RuntimeException("Failed to add h to graph "+mobility);
+		
 		//Add edges to and from existing neighbouring hexes, with costs supplied by the hexes themselves.
 		ArrayList<AxialHexCoord> surroundList = HexCoordUtils.getSurroundingHexCoords(h.getCoords());
 		Iterator<AxialHexCoord> surrounds = surroundList.iterator();
@@ -71,7 +74,9 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		{
 			AxialHexCoord neighbourCoord = surrounds.next();
 			Hex target = this.get(neighbourCoord);
-			if(target != null)
+			
+			//if target is in the hasmap but not the graph yet, wait until it's target's turn rather than trying to do it now.
+			if(target != null && graph.containsVertex(target))
 			{
 				DefaultWeightedEdge hToTarget = graph.addEdge(h,target);
 				DefaultWeightedEdge targetToH = graph.addEdge(target,h);
