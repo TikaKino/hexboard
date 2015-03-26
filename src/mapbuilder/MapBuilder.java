@@ -96,6 +96,40 @@ public class MapBuilder {
 		hex.setType(terrain);
 		hex.setHeight(height);
 		
+		if(!hexEl.getChildren("roads").isEmpty())
+		{
+			OddQOffsetHexCoord oq = hex.getCoords().getOddQOffset();
+			int roadnum = 0;
+			Iterator<Element> roads = hexEl.getChildren("roads").get(0).getChildren("road").iterator();
+			while(roads.hasNext())
+			{
+				roadnum++;
+				Element road = roads.next();
+				String xs = road.getAttributeValue("x");
+				String ys = road.getAttributeValue("y");
+				if(xs == null)
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/@x missing");
+				if(ys == null)
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/@y missing");
+				int x = 0;
+				int y = 0;
+				try {
+					Integer val = Integer.parseInt(xs);
+					x = val.intValue();
+				} catch (NumberFormatException e) {
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/@x not an integer");
+				}
+				try {
+					Integer val = Integer.parseInt(ys);
+					y = val.intValue();
+				} catch (NumberFormatException e) {
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/@y not an integer");
+				}
+				oq = new OddQOffsetHexCoord(oq.x+x,oq.y+y);
+				hex.setRoadTo(oq.getAxial());
+			}
+		}
+		
 		return hex;
 	}
 	
