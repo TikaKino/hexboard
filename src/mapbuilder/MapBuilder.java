@@ -24,6 +24,8 @@ public class MapBuilder {
 			this.xmlDoc = jdomBuilder.build(filename);
 			
 			//Basic integrity checks
+			if(!this.xmlDoc.getRootElement().getName().equals("map"))
+				throw new MapBuildException("Invalid map: root element not named map");
 			if(this.xmlDoc.getRootElement().getChildren("info").isEmpty())
 				throw new MapBuildException("Invalid map: /map/info missing");
 			if(this.xmlDoc.getRootElement().getChildren("info").get(0).getChildren("name").isEmpty())
@@ -34,10 +36,6 @@ public class MapBuilder {
 				throw new MapBuildException("Invalid map: /map/info/height missing");
 			if(this.xmlDoc.getRootElement().getChildren("info").get(0).getChildren("defaulthex").isEmpty())
 				throw new MapBuildException("Invalid map: /map/info/defaulthex missing");
-			//if(this.xmlDoc.getRootElement().getChildren("info").get(0).getChildren("defaulthex").get(0).getChildren("height").isEmpty())
-				//throw new MapBuildException("Invalid map: /map/info/defaulthex/height missing");
-			//if(this.xmlDoc.getRootElement().getChildren("info").get(0).getChildren("defaulthex").get(0).getChildren("terrain").isEmpty())
-				//throw new MapBuildException("Invalid map: /map/info/defaulthex/terrain missing");
 			if(this.xmlDoc.getRootElement().getChildren("hexes").isEmpty())
 				throw new MapBuildException("Invalid map: /map/hexes missing");
 			
