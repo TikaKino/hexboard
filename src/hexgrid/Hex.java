@@ -6,19 +6,20 @@ import java.util.Iterator;
 
 import hexgrid.coords.AxialHexCoord;
 import hexgrid.coords.HexCoordUtils;
+import hexgrid.terraininfo.Terrain;
 
 public class Hex {
 
 	protected AxialHexCoord hexcoord;
-	protected String terrain;
+	protected Terrain terrain;
 	protected int height;
 	private HashMap<AxialHexCoord,Boolean> roads;
 	protected ArrayList<AxialHexCoord> surroundingHexCoords;
 	
-	public Hex(AxialHexCoord hexcoord)
+	public Hex(AxialHexCoord hexcoord, Terrain terrain)
 	{
 		this.hexcoord = hexcoord;
-		this.terrain = "Open";
+		this.terrain = terrain;
 		this.height = 0;
 		
 		//Initialise roads map
@@ -37,25 +38,25 @@ public class Hex {
 		return this.hexcoord;
 	}
 	
-	public void setTerrain(String type)
+	public void setTerrain(Terrain terrain)
 	{
-		this.terrain = type;
+		this.terrain = terrain;
 	}
 	
-	public String getTerrain()
+	public Terrain getTerrain()
 	{
 		return this.terrain;
 	}
 	
 	public String getTypeAbbreviation()
 	{
-		if(this.terrain.equals("Open"))
+		if(this.terrain.getTerrainName().equals("Open"))
 			return "O";
-		if(this.terrain.equals("Light Woods"))
+		if(this.terrain.getTerrainName().equals("Light Woods"))
 			return "LW";
-		if(this.terrain.equals("Heavy Woods"))
+		if(this.terrain.getTerrainName().equals("Heavy Woods"))
 			return "HW";
-		if(this.terrain.equals("Rough"))
+		if(this.terrain.getTerrainName().equals("Rough"))
 			return "R";
 		
 		return "?";
@@ -116,10 +117,10 @@ public class Hex {
 		else
 		{
 			//Any mobility modifications cancelled by the presence of a road here
-			if(this.getTerrain().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getTerrain().getTerrainName().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 1.0;
 		
-			if(this.getTerrain().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getTerrain().getTerrainName().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 2.0;
 		}
 		

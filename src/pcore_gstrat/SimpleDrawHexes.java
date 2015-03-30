@@ -26,6 +26,8 @@ import org.newdawn.slick.geom.Rectangle;
 
 import hexgrid.*;
 import hexgrid.coords.*;
+import hexgrid.terraininfo.TerrainDataException;
+import hexgrid.terraininfo.TerrainManager;
 
 public class SimpleDrawHexes extends BasicGame implements InputProviderListener {
 	
@@ -72,6 +74,16 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				this.hexgrid.put(ac, h);
 			}
 		}*/
+		
+		TerrainManager tMng = TerrainManager.getInstance();
+		try {
+			tMng.initTerrainManager("terraindata.xml");
+		} catch(TerrainDataException e) {
+			System.out.println(e.getMessage());
+			System.exit(1);
+		}
+		
+		
 		try {
 			MapBuilder mb = new MapBuilder("maptest.xml");
 			this.hexgrid = mb.getHexGrid();

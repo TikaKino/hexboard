@@ -6,6 +6,8 @@ import java.util.Iterator;
 import hexgrid.Hex;
 import hexgrid.HexGrid;
 import hexgrid.coords.OddQOffsetHexCoord;
+import hexgrid.terraininfo.Terrain;
+import hexgrid.terraininfo.TerrainManager;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -81,7 +83,12 @@ public class MapBuilder {
 		if(hexEl.getChildren("height").isEmpty())
 			throw new MapBuildException("Invalid map: "+elementLoc+"/height missing");
 		
-		String terrain = hexEl.getChildren("terrain").get(0).getTextNormalize();
+		String terrainName = hexEl.getChildren("terrain").get(0).getTextNormalize();
+		TerrainManager tMng = TerrainManager.getInstance();
+		Terrain terrain = tMng.getTerrain(terrainName);
+		if(terrain == null)
+			throw new MapBuildException("Invalid map: "+elementLoc+"/terrain is not a vlid terrain type ("+terrainName+")");
+		
 		String heightstr = hexEl.getChildren("height").get(0).getTextNormalize();
 		int height = 0;
 		try {
@@ -168,7 +175,7 @@ public class MapBuilder {
 			}
 			
 			OddQOffsetHexCoord oq = new OddQOffsetHexCoord(x,y);
-			Hex hex = new Hex(oq.getAxial());
+			Hex hex = new Hex(oq.getAxial(),null);
 			
 			if(hg.containsKey(hex.getCoords()))
 				throw new MapBuildException("Invalid map: /map/hexes/hex["+elNum+"] is a duplicate hex: ["+oq+"]");
@@ -194,7 +201,7 @@ public class MapBuilder {
 				if(hg.containsKey(oq.getAxial()))
 					continue;
 				
-				Hex hex = new Hex(oq.getAxial());
+				Hex hex = new Hex(oq.getAxial(),null);
 				hex = this.populateHex(hex, hexEl, "/map/info/defaulthex");
 				hg.put(hex.getCoords(), hex);
 			}
