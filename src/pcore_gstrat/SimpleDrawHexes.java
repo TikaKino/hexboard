@@ -281,7 +281,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 			AxialHexCoord ac = hex.getCoords();
 			OddQOffsetHexCoord oq = ac.getOddQOffset();
 			String out = "";
-			out += hex.getType()+" ";
+			out += hex.getTerrain()+" ";
 			out += "("+oq.x+","+oq.y+")";
 			height = this.fontMainText.getHeight(out);
 			

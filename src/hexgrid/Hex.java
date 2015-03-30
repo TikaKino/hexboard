@@ -10,7 +10,7 @@ import hexgrid.coords.HexCoordUtils;
 public class Hex {
 
 	protected AxialHexCoord hexcoord;
-	protected String type;
+	protected String terrain;
 	protected int height;
 	private HashMap<AxialHexCoord,Boolean> roads;
 	protected ArrayList<AxialHexCoord> surroundingHexCoords;
@@ -18,7 +18,7 @@ public class Hex {
 	public Hex(AxialHexCoord hexcoord)
 	{
 		this.hexcoord = hexcoord;
-		this.type = "Open";
+		this.terrain = "Open";
 		this.height = 0;
 		
 		//Initialise roads map
@@ -37,25 +37,25 @@ public class Hex {
 		return this.hexcoord;
 	}
 	
-	public void setType(String type)
+	public void setTerrain(String type)
 	{
-		this.type = type;
+		this.terrain = type;
 	}
 	
-	public String getType()
+	public String getTerrain()
 	{
-		return this.type;
+		return this.terrain;
 	}
 	
 	public String getTypeAbbreviation()
 	{
-		if(this.type.equals("Open"))
+		if(this.terrain.equals("Open"))
 			return "O";
-		if(this.type.equals("Light Woods"))
+		if(this.terrain.equals("Light Woods"))
 			return "LW";
-		if(this.type.equals("Heavy Woods"))
+		if(this.terrain.equals("Heavy Woods"))
 			return "HW";
-		if(this.type.equals("Rough"))
+		if(this.terrain.equals("Rough"))
 			return "R";
 		
 		return "?";
@@ -116,10 +116,10 @@ public class Hex {
 		else
 		{
 			//Any mobility modifications cancelled by the presence of a road here
-			if(this.getType().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getTerrain().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 1.0;
 		
-			if(this.getType().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			if(this.getTerrain().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
 				cost += 2.0;
 		}
 		

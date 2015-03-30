@@ -93,7 +93,7 @@ public class MapBuilder {
 			throw new MapBuildException("Invalid map: "+elementLoc+"/height not an integer");
 		}
 		
-		hex.setType(terrain);
+		hex.setTerrain(terrain);
 		hex.setHeight(height);
 		
 		if(!hexEl.getChildren("roads").isEmpty())
