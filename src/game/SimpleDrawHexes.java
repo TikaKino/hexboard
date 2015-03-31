@@ -1,4 +1,4 @@
-package pcore_gstrat;
+package game;
 
 import java.awt.Font;
 import java.util.ArrayList;

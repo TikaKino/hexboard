@@ -1,4 +1,4 @@
-package pcore_gstrat;
+package game;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
