@@ -37,13 +37,5 @@
 				<mobilitycost type="Air">1.0</mobilitycost>
 			</movementcosts>
 		</terrain>
-		<terrain name="Paved Road">
-			<movementcosts>
-				<default>1.0</default>
-				<mobilitycost type="Wheeled">0.5</mobilitycost>
-				<mobilitycost type="Tracked">0.75</mobilitycost>
-				<mobilitycost type="Air">1.0</mobilitycost>
-			</movementcosts>
-		</terrain>
 	</terrains>
 </tdata>

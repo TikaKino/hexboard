@@ -2,6 +2,7 @@ package hexgrid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import hexgrid.coords.AxialHexCoord;
 import hexgrid.coords.HexCoordUtils;
@@ -76,6 +77,11 @@ public class Hex {
 			return false;
 		
 		return true;
+	}
+	
+	public Set<AxialHexCoord> getAllRoadCoords()
+	{
+		return this.roads.keySet();
 	}
 	
 	public Terrain getRoadTo(AxialHexCoord target)

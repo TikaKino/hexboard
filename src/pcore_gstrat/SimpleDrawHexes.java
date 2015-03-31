@@ -190,6 +190,27 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				
 				g.drawLine(sx + this.viewoffsetx,sy + this.viewoffsety,ex + this.viewoffsetx,ey + this.viewoffsety);
 			}
+			
+			//Draw roads, if any
+			Iterator<AxialHexCoord> roads = hex.getAllRoadCoords().iterator();
+			while(roads.hasNext())
+			{
+				AxialHexCoord roadTo = roads.next();
+				Point us = HexCoordUtils.hexToFractional2D(hex.getCoords());
+				Point them = HexCoordUtils.hexToFractional2D(roadTo);
+				float x = us.getX()/2.0f + them.getX()/2.0f;
+				float y = us.getY()/2.0f + them.getY()/2.0f;
+				Point mid = new Point(x,y);
+				x = (us.getX()/2.0f + mid.getX()/2.0f) * (float)this.hexSizePixels;
+				y = (us.getY()/2.0f + mid.getY()/2.0f) * (float)this.hexSizePixels;
+				Point usmid = new Point(x,y);
+				
+				mid.setX(mid.getX() * (float)this.hexSizePixels);
+				mid.setY(mid.getY() * (float)this.hexSizePixels);
+				
+				g.setLineWidth(1.0f);
+				g.drawLine(usmid.getX() + this.viewoffsetx,usmid.getY() + this.viewoffsety,mid.getX() + this.viewoffsetx,mid.getY() + this.viewoffsety);
+			}
 		}
 		g.setLineWidth(oldw);
 		
