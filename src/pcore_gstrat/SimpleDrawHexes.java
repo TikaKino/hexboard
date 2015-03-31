@@ -193,7 +193,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		}
 		g.setLineWidth(oldw);
 		
-		//Highlight selected hex, hexes within 4.2 distance (completely arbitrary number :p) and path to oq(0,0)
+		//Highlight selected hex, hexes within 2.2 distance (completely arbitrary number :p) and path to oq(0,0)
 		if(this.selected != null)
 		{
 			ArrayList<Hex> surrounds = this.hexgrid.getPossibleGraphHexes(this.selected,2.2,"Infantry");
