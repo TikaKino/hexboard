@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class Terrain {
 	
 	protected String terrainName;
+	protected String terrainAbbreviation;
 	
 	protected double defaultMovementCost;
 	protected HashMap<String,Double> movementCosts;
@@ -12,6 +13,7 @@ public class Terrain {
 	public Terrain(String terrainName, double defaultEntryCost)
 	{
 		this.terrainName = terrainName;
+		this.terrainAbbreviation = "";
 		this.defaultMovementCost = defaultEntryCost;
 		this.movementCosts = new HashMap<String,Double>(10);
 	}
@@ -24,6 +26,16 @@ public class Terrain {
 	public String toString()
 	{
 		return this.terrainName;
+	}
+	
+	public String getAbbreviation()
+	{
+		return this.terrainAbbreviation;
+	}
+	
+	protected void setAbbreviation(String abbreviation)
+	{
+		this.terrainAbbreviation = abbreviation;
 	}
 	
 	public double getDefaultEntryCost()

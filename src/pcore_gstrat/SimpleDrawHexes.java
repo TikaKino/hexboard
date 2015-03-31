@@ -159,7 +159,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 			int py = (int)(fractionalHexCenter.getY() * (float)this.hexSizePixels);
 			int hexh = (int)((float)Math.sqrt(3)/2 * (float)this.hexSizePixels);
 			
-			String centre = hex.getTypeAbbreviation();
+			String centre = hex.getTerrain().getAbbreviation();
 			width = this.fontCentreLetter.getWidth(centre) / 2;
 			height = this.fontCentreLetter.getHeight(centre) / 2;
 			this.fontCentreLetter.drawString((float)(px+this.viewoffsetx-width), (float)(py+this.viewoffsety-height), centre);

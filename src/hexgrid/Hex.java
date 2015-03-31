@@ -42,20 +42,6 @@ public class Hex {
 		return this.terrain;
 	}
 	
-	public String getTypeAbbreviation()
-	{
-		if(this.terrain.getTerrainName().equals("Open"))
-			return "O";
-		if(this.terrain.getTerrainName().equals("Light Woods"))
-			return "LW";
-		if(this.terrain.getTerrainName().equals("Heavy Woods"))
-			return "HW";
-		if(this.terrain.getTerrainName().equals("Rough"))
-			return "R";
-		
-		return "?";
-	}
-	
 	public void setHeight(int height)
 	{
 		this.height = height;

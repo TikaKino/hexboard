@@ -55,6 +55,9 @@ public class TerrainManager {
 					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/@name missing or empty.");
 				if(this.terrains.containsKey(terrainName))
 					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/@name is a duplicate.");
+				String terrainAbbreviation = terrainName.substring(0,1);
+				if(!terrainEl.getChildren("abbreviation").isEmpty() && !terrainEl.getChildren("abbreviation").get(0).getTextNormalize().equals(""))
+					terrainAbbreviation = terrainEl.getChildren("abbreviation").get(0).getTextNormalize();
 				if(terrainEl.getChildren("movementcosts").isEmpty())
 					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts missing.");
 				if(terrainEl.getChildren("movementcosts").get(0).getChildren("default").isEmpty())
@@ -69,6 +72,7 @@ public class TerrainManager {
 				}
 				
 				Terrain terrain = new Terrain(terrainName,costDbl);
+				terrain.setAbbreviation(terrainAbbreviation);
 				
 				Iterator<Element> mobCosts = terrainEl.getChildren("movementcosts").get(0).getChildren("mobilitycost").iterator();
 				int mobNum = 0;

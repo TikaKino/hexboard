@@ -2,12 +2,14 @@
 <tdata>
 	<terrains>
 		<terrain name="Open">
+			<abbreviation>O</abbreviation>
 			<movementcosts>
 				<default>1.0</default>
 				<mobilitycost type="Air">1.0</mobilitycost>
 			</movementcosts>
 		</terrain>
 		<terrain name="Light Woods">
+			<abbreviation>LW</abbreviation>
 			<movementcosts>
 				<default>2.0</default>
 				<mobilitycost type="Infantry">1.0</mobilitycost>
@@ -15,6 +17,7 @@
 			</movementcosts>
 		</terrain>
 		<terrain name="Heavy Woods">
+			<abbreviation>HW</abbreviation>
 			<movementcosts>
 				<default>3.0</default>
 				<mobilitycost type="Infantry">1.5</mobilitycost>
@@ -23,6 +26,7 @@
 			</movementcosts>
 		</terrain>
 		<terrain name="Rough">
+			<abbreviation>R</abbreviation>
 			<movementcosts>
 				<default>2.0</default>
 				<mobilitycost type="Infantry">1.0</mobilitycost>
@@ -30,6 +34,7 @@
 			</movementcosts>
 		</terrain>
 		<terrain name="Dirt Road">
+			<abbreviation>DRd</abbreviation>
 			<movementcosts>
 				<default>1.0</default>
 				<mobilitycost type="Wheeled">0.75</mobilitycost>
