@@ -31,7 +31,7 @@ public class Terrain {
 		return this.defaultMovementCost;
 	}
 	
-	public void setEntryCost(String mobilityType, double moveCost)
+	protected void setEntryCost(String mobilityType, double moveCost)
 	{
 		this.movementCosts.put(mobilityType, new Double(moveCost));
 	}
