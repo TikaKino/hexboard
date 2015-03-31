@@ -13,7 +13,10 @@ public class Terrain {
 	public Terrain(String terrainName, double defaultEntryCost)
 	{
 		this.terrainName = terrainName;
-		this.terrainAbbreviation = "";
+		if(terrainName.length() > 0)
+			this.terrainAbbreviation = terrainName.substring(0,1);
+		else
+			this.terrainAbbreviation = "";
 		this.defaultMovementCost = defaultEntryCost;
 		this.movementCosts = new HashMap<String,Double>(10);
 	}
