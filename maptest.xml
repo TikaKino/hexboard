@@ -12,15 +12,34 @@
 	</info>
 	<hexes>
 		<hex x="0" y="0">
-			<terrain>Light Woods</terrain>
+			<terrain>Heavy Woods</terrain>
 			<height>0</height>
 			<roads>
-				<road x="1" y="0"/>
+				<road x="1" y="0">
+					<terrain>Dirt Road</terrain>
+				</road>
 			</roads>
 		</hex>
 		<hex x="1" y="0">
-			<terrain>Light Woods</terrain>
+			<terrain>Heavy Woods</terrain>
 			<height>1</height>
+			<roads>
+				<road x="0" y="0">
+					<terrain>Dirt Road</terrain>
+				</road>
+				<road x="2" y="1">
+					<terrain>Dirt Road</terrain>
+				</road>
+			</roads>
+		</hex>
+		<hex x="2" y="1">
+			<terrain>Open</terrain>
+			<height>0</height>
+			<roads>
+				<road x="1" y="0">
+					<terrain>Dirt Road</terrain>
+				</road>
+			</roads>
 		</hex>
 	</hexes>
 </map>

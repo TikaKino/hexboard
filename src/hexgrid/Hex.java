@@ -2,7 +2,6 @@ package hexgrid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import hexgrid.coords.AxialHexCoord;
 import hexgrid.coords.HexCoordUtils;
@@ -13,7 +12,7 @@ public class Hex {
 	protected AxialHexCoord hexcoord;
 	protected Terrain terrain;
 	protected int height;
-	private HashMap<AxialHexCoord,Boolean> roads;
+	private HashMap<AxialHexCoord,Terrain> roads;
 	protected ArrayList<AxialHexCoord> surroundingHexCoords;
 	
 	public Hex(AxialHexCoord hexcoord, Terrain terrain)
@@ -23,14 +22,8 @@ public class Hex {
 		this.height = 0;
 		
 		//Initialise roads map
-		this.roads = new HashMap<AxialHexCoord,Boolean>(6);
+		this.roads = new HashMap<AxialHexCoord,Terrain>(6);
 		this.surroundingHexCoords = HexCoordUtils.getSurroundingHexCoords(hexcoord);
-		Iterator<AxialHexCoord> it = this.surroundingHexCoords.iterator();
-		while(it.hasNext())
-		{
-			AxialHexCoord co = it.next();
-			this.roads.put(co, new Boolean(false));
-		}
 	}
 	
 	public AxialHexCoord getCoords()
@@ -74,18 +67,42 @@ public class Hex {
 	
 	public boolean hasRoadTo(AxialHexCoord target)
 	{
-		Boolean b = this.roads.get(target);
-		
-		if(b == null)
+		if(!this.surroundingHexCoords.contains(target))
 			throw new HexGridNeighbourException("Cannot get presence of road from "+this.hexcoord+" to non-neighbour "+target);
 		
-		return b.booleanValue();
+		Terrain t = this.roads.get(target);
+		
+		if(t == null)
+			return false;
+		
+		return true;
 	}
 	
-	public void setRoadTo(AxialHexCoord target)
+	public Terrain getRoadTo(AxialHexCoord target)
+	{
+		if(!this.hasRoadTo(target))
+			return null;
+		
+		return this.roads.get(target);
+	}
+	
+	public void setRoadTo(AxialHexCoord target, Terrain roadTerrain)
 	{
 		if(!this.surroundingHexCoords.contains(target))
 			throw new HexGridNeighbourException("Cannot set presence of road from "+this.hexcoord+" to non-neighbour "+target);
+		
+		if(roadTerrain == null)
+			this.roads.remove(target);
+		
+		this.roads.put(target, roadTerrain);
+	}
+	
+	public void removeRoadTo(AxialHexCoord target)
+	{
+		if(!this.surroundingHexCoords.contains(target))
+			throw new HexGridNeighbourException("Cannot remove of road from "+this.hexcoord+" to non-neighbour "+target);
+		
+		this.roads.remove(target);
 	}
 	
 	public double getEntryCost(String mobilityType, Hex source)
@@ -98,31 +115,23 @@ public class Hex {
 		
 		double cost = 1.0;
 		
-		if(mobilityType.equals("Air"))
-			return cost;
-		
-		int heightDiff = Math.abs(this.getHeight() - source.getHeight());
-		if(heightDiff != 0 && (mobilityType.equals("Infantry") || mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
-			cost += (double)heightDiff;
-		
-		//Determine if there is a road between these hexes; if not, apply mobility penalties for terrain type.
+		//Determine if there is a road between these hexes. If so, use the cost of that road; if not, use the cost of the terrain.
 		if(source.hasRoadTo(this.getCoords()) && this.hasRoadTo(source.getCoords()))
 		{
-			//Any road-specific mobility modifications here
-			if(mobilityType.equals("Wheeled"))
-				cost *= 0.5;
-			else if(mobilityType.equals("Tracked"))
-				cost *= 0.75;
+			//Cost of road
+			double roadTo = this.getRoadTo(source.getCoords()).getEntryCost(mobilityType);
+			double roadFrom = source.getRoadTo(this.getCoords()).getEntryCost(mobilityType);
+			cost = Math.max(roadTo, roadFrom);
 		}
 		else
 		{
-			//Any mobility modifications cancelled by the presence of a road here
-			if(this.getTerrain().getTerrainName().equals("Light Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
-				cost += 1.0;
-		
-			if(this.getTerrain().getTerrainName().equals("Heavy Woods") && (mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
-				cost += 2.0;
+			//Cost of terrain
+			cost = this.terrain.getEntryCost(mobilityType);
 		}
+		
+		//int heightDiff = Math.abs(this.getHeight() - source.getHeight());
+		//if(heightDiff != 0 && (mobilityType.equals("Infantry") || mobilityType.equals("Wheeled") || mobilityType.equals("Tracked")))
+			//cost += (double)heightDiff;
 		
 		return cost;
 	}

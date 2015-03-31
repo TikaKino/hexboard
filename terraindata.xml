@@ -2,12 +2,48 @@
 <tdata>
 	<terrains>
 		<terrain name="Open">
+			<movementcosts>
+				<default>1.0</default>
+				<mobilitycost type="Air">1.0</mobilitycost>
+			</movementcosts>
 		</terrain>
 		<terrain name="Light Woods">
+			<movementcosts>
+				<default>2.0</default>
+				<mobilitycost type="Infantry">1.0</mobilitycost>
+				<mobilitycost type="Air">1.0</mobilitycost>
+			</movementcosts>
 		</terrain>
 		<terrain name="Heavy Woods">
+			<movementcosts>
+				<default>3.0</default>
+				<mobilitycost type="Infantry">1.5</mobilitycost>
+				<mobilitycost type="Tracked">2.0</mobilitycost>
+				<mobilitycost type="Air">1.0</mobilitycost>
+			</movementcosts>
 		</terrain>
 		<terrain name="Rough">
+			<movementcosts>
+				<default>2.0</default>
+				<mobilitycost type="Infantry">1.0</mobilitycost>
+				<mobilitycost type="Tracked">1.5</mobilitycost>
+			</movementcosts>
+		</terrain>
+		<terrain name="Dirt Road">
+			<movementcosts>
+				<default>1.0</default>
+				<mobilitycost type="Wheeled">0.75</mobilitycost>
+				<mobilitycost type="Tracked">0.75</mobilitycost>
+				<mobilitycost type="Air">1.0</mobilitycost>
+			</movementcosts>
+		</terrain>
+		<terrain name="Paved Road">
+			<movementcosts>
+				<default>1.0</default>
+				<mobilitycost type="Wheeled">0.5</mobilitycost>
+				<mobilitycost type="Tracked">0.75</mobilitycost>
+				<mobilitycost type="Air">1.0</mobilitycost>
+			</movementcosts>
 		</terrain>
 	</terrains>
 </tdata>

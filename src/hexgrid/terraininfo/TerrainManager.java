@@ -55,8 +55,39 @@ public class TerrainManager {
 					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/@name missing or empty.");
 				if(this.terrains.containsKey(terrainName))
 					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/@name is a duplicate.");
+				if(terrainEl.getChildren("movementcosts").isEmpty())
+					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts missing.");
+				if(terrainEl.getChildren("movementcosts").get(0).getChildren("default").isEmpty())
+					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts/default missing.");
+				String costStr = terrainEl.getChildren("movementcosts").get(0).getChildren("default").get(0).getTextNormalize();
+				double costDbl;
 				
-				Terrain terrain = new Terrain(terrainName);
+				try {
+					costDbl = Double.parseDouble(costStr);
+				} catch(NumberFormatException e) {
+					throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts/default is not a number.");
+				}
+				
+				Terrain terrain = new Terrain(terrainName,costDbl);
+				
+				Iterator<Element> mobCosts = terrainEl.getChildren("movementcosts").get(0).getChildren("mobilitycost").iterator();
+				int mobNum = 0;
+				while(mobCosts.hasNext())
+				{
+					mobNum++;
+					Element mobCost = mobCosts.next();
+					String mobType = mobCost.getAttributeValue("type");
+					if(mobType == null || mobType.equals(""))
+						throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts/mobilitycost["+mobNum+"]/@type missing or empty.");
+					String mobCostStr = mobCost.getTextNormalize();
+					double mobCostDbl;
+					try {
+						mobCostDbl = Double.parseDouble(mobCostStr);
+					} catch (NumberFormatException e) {
+						throw new TerrainDataException("Invalid Terrain Data: /tdata/terrains/terrain["+terrainNum+"]/movementcosts/mobilitycost["+mobNum+"] is not a number.");
+					}
+					terrain.setEntryCost(mobType, mobCostDbl);
+				}
 				
 				this.terrains.put(terrainName, terrain);
 			}

@@ -87,7 +87,7 @@ public class MapBuilder {
 		TerrainManager tMng = TerrainManager.getInstance();
 		Terrain terrain = tMng.getTerrain(terrainName);
 		if(terrain == null)
-			throw new MapBuildException("Invalid map: "+elementLoc+"/terrain is not a vlid terrain type ("+terrainName+")");
+			throw new MapBuildException("Invalid map: "+elementLoc+"/terrain is not a valid terrain type ("+terrainName+")");
 		
 		String heightstr = hexEl.getChildren("height").get(0).getTextNormalize();
 		int height = 0;
@@ -130,8 +130,16 @@ public class MapBuilder {
 				} catch (NumberFormatException e) {
 					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/@y not an integer");
 				}
-				oq = new OddQOffsetHexCoord(oq.x+x,oq.y+y);
-				hex.setRoadTo(oq.getAxial());
+				oq = new OddQOffsetHexCoord(x,y);
+				
+				if(road.getChildren("terrain").isEmpty())
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/terrain missing.");
+				String roadTerrainName = road.getChildren("terrain").get(0).getTextTrim();
+				Terrain roadTerrain = tMng.getTerrain(roadTerrainName);
+				if(roadTerrain == null)
+					throw new MapBuildException("Invalid map: "+elementLoc+"/roads/road["+roadnum+"]/terrain is not a valid terrain type ("+roadTerrainName+")");
+				
+				hex.setRoadTo(oq.getAxial(), roadTerrain);
 			}
 		}
 		
@@ -208,17 +216,5 @@ public class MapBuilder {
 		}
 		
 		return hg;
-	}
-	
-	///////////////////////////////////////////////////////
-	public static void main(String[] args)
-	{
-		try {
-			MapBuilder mfr = new MapBuilder("maptest.xml");
-			System.out.println(mfr.getMapName());
-			mfr.getHexGrid();
-		} catch (MapBuildException e) {
-			System.out.println("Error building map: "+e.getMessage());
-		}
 	}
 }
