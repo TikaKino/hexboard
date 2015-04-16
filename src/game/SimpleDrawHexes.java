@@ -21,7 +21,6 @@ import org.newdawn.slick.command.Command;
 import org.newdawn.slick.command.InputProvider;
 import org.newdawn.slick.command.InputProviderListener;
 import org.newdawn.slick.command.MouseButtonControl;
-import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
 
 import hexgrid.*;
@@ -205,8 +204,8 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 				y = (us.getY()/2.0f + mid.getY()/2.0f) * (float)this.hexSizePixels;
 				Point usmid = new Point(x,y);
 				
-				mid.setX(mid.getX() * (float)this.hexSizePixels);
-				mid.setY(mid.getY() * (float)this.hexSizePixels);
+				mid.x = mid.getX() * (float)this.hexSizePixels;
+				mid.y = mid.getY() * (float)this.hexSizePixels;
 				
 				g.setLineWidth(1.0f);
 				g.drawLine(usmid.getX() + this.viewoffsetx,usmid.getY() + this.viewoffsety,mid.getX() + this.viewoffsetx,mid.getY() + this.viewoffsety);

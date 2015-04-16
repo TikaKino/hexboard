@@ -1,8 +1,8 @@
 package hexgrid.coords;
 
-import java.util.ArrayList;
+import hexgrid.Point;
 
-import org.newdawn.slick.geom.Point;
+import java.util.ArrayList;
 
 /**
  * Utility functions to handle individual co-ordinate points, converting between the possible systems.
