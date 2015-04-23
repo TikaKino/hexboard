@@ -130,16 +130,16 @@ public class HexCoordUtils {
 		//For consistency and to reduce rounding errors, each hex "owns" the two corners level with its 
 		//centre; i=0 and i=3 by the standard model.
 		//Top left corner is owned by a(-1,0); Top right by a(1,-1); Bottom left by a(-1,1) and Bottom right by a(1,0)
-		//order is R,BR,BL,L,TL,TR
+		//order is TL,TR,R,BR,BL,L
 		//This is better than using sin and cos to calculate points from the center of each hex individually
 		//as that leads to subtly different coordinates for each point thanks to the joys of float precision errors
 		
+		out.add(HexCoordUtils.rightHexCornerFractional2D(new AxialHexCoord(ac.q-1,ac.r)));
+		out.add(HexCoordUtils.leftHexCornerFractional2D(new AxialHexCoord(ac.q+1,ac.r-1)));
 		out.add(HexCoordUtils.rightHexCornerFractional2D(ac));
 		out.add(HexCoordUtils.leftHexCornerFractional2D(new AxialHexCoord(ac.q+1,ac.r)));
 		out.add(HexCoordUtils.rightHexCornerFractional2D(new AxialHexCoord(ac.q-1,ac.r+1)));
 		out.add(HexCoordUtils.leftHexCornerFractional2D(ac));
-		out.add(HexCoordUtils.rightHexCornerFractional2D(new AxialHexCoord(ac.q-1,ac.r)));
-		out.add(HexCoordUtils.leftHexCornerFractional2D(new AxialHexCoord(ac.q+1,ac.r-1)));
 		
 		return out;
 	}
