@@ -13,7 +13,7 @@ import org.jgrapht.traverse.ClosestFirstIterator;
 
 import hexgrid.coords.*;
 
-public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
+public class HexGrid<V extends Hex> extends HashMap<AxialHexCoord,V>  {
 
 	/**
 	 * 
@@ -39,7 +39,7 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		this.mobilityGraphs.put(mobility, graph);
 		
 		//Add our existing hexes to the new graph, if any; otherwise, adding a new mobility type mid-runtime would screw everything up.
-		Iterator<Hex> hexes = this.values().iterator();
+		Iterator<V> hexes = this.values().iterator();
 		while(hexes.hasNext())
 		{
 			Hex hex = hexes.next();
@@ -98,9 +98,9 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		}
 	}
 	
-	public Hex put(AxialHexCoord ac, Hex h)
+	public V put(AxialHexCoord ac, V h)
 	{
-		Hex h2 = super.put(ac,h);
+		V h2 = super.put(ac,h);
 		
 		//Remove previous version (if any) from the graph
 		if(h2 != null)
@@ -112,9 +112,9 @@ public class HexGrid extends HashMap<AxialHexCoord,Hex>  {
 		return h2;
 	}
 	
-	public Hex remove(Object o)
+	public V remove(Object o)
 	{
-		Hex rem = super.remove(o);
+		V rem = super.remove(o);
 		if(rem != null)
 			this.removeFromAllMobilityGraphs(rem);
 		return rem;

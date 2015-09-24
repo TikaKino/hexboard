@@ -32,7 +32,7 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 	
 	protected int hexSizePixels;
 	protected int gridsize = 8;
-	protected HexGrid hexgrid;
+	protected HexGrid<Hex> hexgrid;
 	
 	protected Hex selected;
 	protected ArrayList<Hex> pathToSelected;
@@ -84,7 +84,8 @@ public class SimpleDrawHexes extends BasicGame implements InputProviderListener 
 		
 		
 		try {
-			MapBuilder mb = new MapBuilder("maptest.xml");
+			HexFactoryHex factory = new HexFactoryHex();
+			MapBuilder<Hex> mb = new MapBuilder<Hex>("maptest.xml",factory);
 			this.hexgrid = mb.getHexGrid();
 		} catch (MapBuildException e) {
 			System.out.println(e.getMessage());

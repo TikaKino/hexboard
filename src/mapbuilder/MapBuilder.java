@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 import hexgrid.Hex;
+import hexgrid.HexFactory;
 import hexgrid.HexGrid;
 import hexgrid.coords.OddQOffsetHexCoord;
 import hexgrid.terraininfo.Terrain;
@@ -14,12 +15,14 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-public class MapBuilder {
+public class MapBuilder<T extends Hex> {
 
 	protected Document xmlDoc;
+	protected HexFactory<T> factory;
 	
-	public MapBuilder(String filename) throws MapBuildException
+	public MapBuilder(String filename,HexFactory<T> factory) throws MapBuildException
 	{
+		this.factory = factory;
 		SAXBuilder jdomBuilder = new SAXBuilder();
 		try {
 			
@@ -76,7 +79,7 @@ public class MapBuilder {
 		}
 	}
 	
-	private Hex populateHex(Hex hex, Element hexEl, String elementLoc) throws MapBuildException
+	private T populateHex(T hex, Element hexEl, String elementLoc) throws MapBuildException
 	{
 		if(hexEl.getChildren("terrain").isEmpty())
 			throw new MapBuildException("Invalid map: "+elementLoc+"/terrain missing");
@@ -147,10 +150,10 @@ public class MapBuilder {
 	}
 	
 	//Only returns the explicitly defined hexes, doesn't fill in width and height with default hexes.
-	public HexGrid getExplicitHexGrid() throws MapBuildException 
+	public HexGrid<T> getExplicitHexGrid() throws MapBuildException 
 	{
 		Iterator<Element> hexes = this.xmlDoc.getRootElement().getChildren("hexes").get(0).getChildren("hex").iterator();
-		HexGrid hg = new HexGrid(this.getMapWidth(),this.getMapHeight());
+		HexGrid<T> hg = new HexGrid<T>(this.getMapWidth(),this.getMapHeight());
 		int elNum = 0;
 		
 		while(hexes.hasNext())
@@ -183,7 +186,8 @@ public class MapBuilder {
 			}
 			
 			OddQOffsetHexCoord oq = new OddQOffsetHexCoord(x,y);
-			Hex hex = new Hex(oq.getAxial(),null);
+			//T hex = new T(oq.getAxial(),null);
+			T hex = this.factory.produceHex(oq.getAxial(),null);
 			
 			if(hg.containsKey(hex.getCoords()))
 				throw new MapBuildException("Invalid map: /map/hexes/hex["+elNum+"] is a duplicate hex: ["+oq+"]");
@@ -196,9 +200,9 @@ public class MapBuilder {
 		return hg;
 	}
 	
-	public HexGrid getHexGrid() throws MapBuildException
+	public HexGrid<T> getHexGrid() throws MapBuildException
 	{
-		HexGrid hg = this.getExplicitHexGrid();
+		HexGrid<T> hg = this.getExplicitHexGrid();
 		Element hexEl = this.xmlDoc.getRootElement().getChildren("info").get(0).getChildren("defaulthex").get(0);
 		
 		for(int x = 0; x < this.getMapWidth(); x++)
@@ -209,7 +213,7 @@ public class MapBuilder {
 				if(hg.containsKey(oq.getAxial()))
 					continue;
 				
-				Hex hex = new Hex(oq.getAxial(),null);
+				T hex = this.factory.produceHex(oq.getAxial(),null);
 				hex = this.populateHex(hex, hexEl, "/map/info/defaulthex");
 				hg.put(hex.getCoords(), hex);
 			}
