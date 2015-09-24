@@ -1,14 +1,14 @@
 package mapbuilder;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import hexgrid.Hex;
-import hexgrid.HexFactory;
 import hexgrid.HexGrid;
 import hexgrid.coords.OddQOffsetHexCoord;
-import hexgrid.terraininfo.Terrain;
-import hexgrid.terraininfo.TerrainManager;
+//import hexgrid.terraininfo.Terrain;
+//import hexgrid.terraininfo.TerrainManager;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -79,7 +79,7 @@ public class MapBuilder<T extends Hex> {
 		}
 	}
 	
-	private T populateHex(T hex, Element hexEl, String elementLoc) throws MapBuildException
+	/*private T populateHex(T hex, Element hexEl, String elementLoc) throws MapBuildException
 	{
 		if(hexEl.getChildren("terrain").isEmpty())
 			throw new MapBuildException("Invalid map: "+elementLoc+"/terrain missing");
@@ -147,7 +147,7 @@ public class MapBuilder<T extends Hex> {
 		}
 		
 		return hex;
-	}
+	}*/
 	
 	//Only returns the explicitly defined hexes, doesn't fill in width and height with default hexes.
 	public HexGrid<T> getExplicitHexGrid() throws MapBuildException 
@@ -187,12 +187,12 @@ public class MapBuilder<T extends Hex> {
 			
 			OddQOffsetHexCoord oq = new OddQOffsetHexCoord(x,y);
 			//T hex = new T(oq.getAxial(),null);
-			T hex = this.factory.produceHex(oq.getAxial(),null);
+			T hex = this.factory.produceHex(oq.getAxial(),hexEl);
 			
 			if(hg.containsKey(hex.getCoords()))
 				throw new MapBuildException("Invalid map: /map/hexes/hex["+elNum+"] is a duplicate hex: ["+oq+"]");
 			
-			hex = this.populateHex(hex, hexEl, "/map/hexes/hex["+elNum+"]");
+			//hex = this.populateHex(hex, hexEl, "/map/hexes/hex["+elNum+"]");
 			
 			hg.put(hex.getCoords(), hex);
 		}
@@ -213,12 +213,31 @@ public class MapBuilder<T extends Hex> {
 				if(hg.containsKey(oq.getAxial()))
 					continue;
 				
-				T hex = this.factory.produceHex(oq.getAxial(),null);
-				hex = this.populateHex(hex, hexEl, "/map/info/defaulthex");
+				T hex = this.factory.produceHex(oq.getAxial(),hexEl);
+				//hex = this.populateHex(hex, hexEl, "/map/info/defaulthex");
 				hg.put(hex.getCoords(), hex);
 			}
 		}
 		
 		return hg;
+	}
+	
+	public static String getElementLocString(Element e)
+	{
+		Element working = e;
+		ArrayList<Element> chain = new ArrayList<Element>();
+		while(working != null)
+		{
+			chain.add(working);
+			working = working.getParentElement();
+		}
+		Iterator<Element> chainIt = chain.iterator();
+		String out = "";
+		while(chainIt.hasNext())
+		{
+			working = chainIt.next();
+			out += "/"+working.getName();
+		}
+		return out;
 	}
 }
